@@ -10,6 +10,71 @@ const getIntFromBuffer = (buffer, offset) => {
 const parseCharacter = (data) => {
   let totalOffset = 0;
 
+  const decoder = new TextDecoder();
+
+  const myData = new DataView(data); //cast to data view
+
+  const hashLength = myData.getInt8();
+  totalOffset += 1; //hash length is 1 byte
+
+  const hashView = new DataView(data, 1, hashLength);
+  const hash = decoder.decode(hashView);
+  totalOffset += hashLength; //add the length of hash to our offset
+
+  const dateLength = myData.getInt8(totalOffset);
+  totalOffset += 1;
+
+  const lastUpdate = myData.getFloat64(totalOffset);
+  totalOffset += dateLength;
+
+  const x = getIntFromBuffer(myData, totalOffset);
+  totalOffset += 2;
+
+  const y = getIntFromBuffer(myData, totalOffset);
+  totalOffset += 2;
+
+  const prevX = getIntFromBuffer(myData, totalOffset);
+  totalOffset += 2;
+
+  const prevY = getIntFromBuffer(myData, totalOffset);
+  totalOffset += 2;
+
+  const destX = getIntFromBuffer(myData, totalOffset);
+  totalOffset += 2;
+
+  const destY = getIntFromBuffer(myData, totalOffset);
+  totalOffset += 2;
+
+  const height = getIntFromBuffer(myData, totalOffset);
+  totalOffset += 2;
+
+  const width = getIntFromBuffer(myData, totalOffset);
+  totalOffset += 2;
+
+  const frame = getIntFromBuffer(myData, totalOffset);
+  totalOffset += 2;
+
+  const frameCount = getIntFromBuffer(myData, totalOffset);
+  totalOffset += 2;
+
+  const alphaView = new DataView(data, totalOffset, 4);
+  const alpha = alphaView.getFloat32();
+  totalOffset += 4; //add the length of hash to our offset
+
+  const direction = myData.getUint8(totalOffset);
+  totalOffset += 1;
+
+  const moveLeft = myData.getUint8(totalOffset);
+  totalOffset += 1;
+
+  const moveRight = myData.getUint8(totalOffset);
+  totalOffset += 1;
+
+  const moveDown = myData.getUint8(totalOffset);
+  totalOffset += 1;
+
+  const moveUp = myData.getUint8(totalOffset);
+  totalOffset += 1;
   
   const character = {
     hash: hash,
